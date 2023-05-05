@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import { UsersService } from "../services/userService";
-import { User } from '../typedefs';
+import { UsersService } from "../services/userService"
+import { User } from '../models/User';
+import { UserValues } from '../typedefs';
 
 
 export class UserController {
@@ -10,14 +11,14 @@ export class UserController {
     this.userService = new UsersService();
   }
 
-  getUsers = (req: Request, res: Response<User[]>) => {
-    const users = this.userService.getAllUsers();
+  getUsers = async (req: Request, res: Response<User[]>) => {
+    const users = await this.userService.getAllUsers();
 
     return res.send(users);
   }
 
-  addUser = (
-    req: Request<unknown, User, Omit<User, 'id'>>,
+  addUser = async (
+    req: Request<unknown, User, UserValues>,
     res: Response<User | string>
   ) => {
     const { body } = req;
@@ -34,7 +35,7 @@ export class UserController {
       return res.send('Email is not valid');
     }
 
-    const user = this.userService.addUser(body);
+    const user = await this.userService.addUser(body);
 
     res.statusCode = 201;
     return res.send(user);

@@ -1,16 +1,11 @@
-export interface Todo {
-  id: number;
-  createdAt: string;
-  updatedAt: string;
-  userId: number;
+export interface TodoValues {
+  userId: number,
   title: string;
   completed: boolean;
 }
 
-export interface User {
-  id: number;
+export interface UserValues {
   name: string;
   email: string;
 }
-
 

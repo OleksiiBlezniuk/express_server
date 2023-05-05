@@ -1,9 +1,10 @@
 import express from 'express';
 import { router as todosRouter } from './routes/todosRouter';
 import { router as usersRouter } from './routes/usersRouter';
-
+import { initDb } from './initDb';
 
 const app = express();
+const sequelize = initDb();
 
 const PORT = 4000;
 const TODOS_ENPOINT = '/todos';

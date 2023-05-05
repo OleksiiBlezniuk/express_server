@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { TodosService } from '../services/todoService';
-import { Todo } from '../typedefs';
+import { TodoValues } from '../typedefs';
 import { UsersService } from '../services/userService';
+import { Todo } from '../models/Todo';
 
 export class TodoController {
   protected readonly todosService: TodosService;
@@ -12,18 +13,18 @@ export class TodoController {
     this.usersService = new UsersService();
   }
 
-  getTodos = (req: Request, res: Response<Todo[]>) => {
-    const todos = this.todosService.getAllTodos();
+  getTodos = async (req: Request, res: Response<Todo[]>) => {
+    const todos = await this.todosService.getAllTodos();
 
     return res.send(todos);
   }
 
-  addTodo = (
-    req: Request<unknown, Todo, Omit<Todo, 'id' | 'createdAt' | 'updatedAt'>>,
+  addTodo = async (
+    req: Request<unknown, Todo, TodoValues>,
     res: Response<Todo | string>
   ) => {
     const { body } = req;
-    const users = this.usersService.getAllUsers();
+    const users = await this.usersService.getAllUsers();
 
     if (body.userId !== null
       && !users.some((user: any) => user.id === body.userId)
@@ -42,7 +43,7 @@ export class TodoController {
       res.send('Completed is not correct');
     }
 
-    const newTodo = this.todosService.addTodo(body);
+    const newTodo = await this.todosService.addTodo(body);
 
     res.statusCode = 201;
     return res.send(newTodo);
